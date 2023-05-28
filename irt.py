@@ -1,4 +1,10 @@
 import numpy as np
+import pandas as pd
+from pandas import DataFrame
+
+
+def irt(df: DataFrame):
+    pass
 
 
 def iter_step(matrix: np.array):
@@ -21,7 +27,3 @@ def iter_step(matrix: np.array):
 
     return ability, difficult
 
-
-if __name__ == '__main__':
-    matrix = np.random.binomial(1, 0.45, size=(3, 4))
-    print(iter_step(matrix))
