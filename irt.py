@@ -26,6 +26,8 @@ def prepare(df: DataFrame):
     rejected_tasks = list(filter(check_task, tasks))
     df = df.loc[:, ~df.columns.isin(rejected_tasks)]
 
+    # TODO: remove Series with ones only.
+
     return df, rejected_subjects, rejected_tasks    
 
 
@@ -44,15 +46,23 @@ def irt(df: DataFrame):
     # Remove zeros Series from input data.
     df, _, _ = prepare(df)
     matrix = df.to_numpy()
-
-
     # Get prediction about test subjects ability and task diffiult.  
     ability, difficult = predict(matrix)
     # Shift vector of difficults to zero mean.
     bias_difficult = difficult - difficult.mean()
-    # Try to minimize difference between estimated and real values
+
+
+    # Build estimated data by ability and difficult logits
     ev = estimated_values(ability, bias_difficult)
-    # TODO: Dispersion of estimated values.
+    # Dispersion of estimated values.
+    ability_err, diff_err = dispersion(ev)
+    ability_diff, diff_diff = logits_difference(matrix, ev)
+    # Try to minimize this value getting more quality logits.
+    err = np.sum(ability_diff ** 2)
+    # get new logits.
+    ability = ability - (ability_diff / ability_err)
+    difficult = difficult - (diff_diff / diff_err)
+    bias_difficult = difficult - difficult.mean()
 
     return predict(ev)
 
@@ -97,3 +107,16 @@ def estimated_values(ability: np.array, bias_difficult: np.array) -> np.array:
         ev_vec = diff_exp / (1 + diff_exp)
         ev_matrix = np.concatenate((ev_matrix, [ev_vec]), axis=0)
     return ev_matrix[1::].T
+
+
+def dispersion(ev: np.array):
+    ev_dispersion = ev * (1-ev)
+    ability_err = -1 * np.sum(ev_dispersion, axis=1)
+    diff_err = -1 * np.sum(ev_dispersion, axis=0)
+    return ability_err, diff_err
+
+
+def logits_difference(prev_matrix, ev):
+    difference = matrix - ev
+    ability_diff = np.sum(difference, axis=1)
+    diff_diff = np.sum(difference, axis=0)
