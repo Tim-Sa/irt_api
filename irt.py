@@ -31,7 +31,7 @@ def prepare(df: DataFrame):
     return df, rejected_subjects, rejected_tasks    
 
 
-def irt(df: DataFrame):
+def irt(df: DataFrame, steps = 10):
     '''
     Calculation of scores for the subjects of their tasks 
     in the form of logits on the IRT model.
@@ -50,21 +50,20 @@ def irt(df: DataFrame):
     ability, difficult = predict(matrix)
     # Shift vector of difficults to zero mean.
     bias_difficult = difficult - difficult.mean()
-
-
-    # Build estimated data by ability and difficult logits
-    ev = estimated_values(ability, bias_difficult)
-    # Dispersion of estimated values.
-    ability_err, diff_err = dispersion(ev)
-    ability_diff, diff_diff = logits_difference(matrix, ev)
-    # Try to minimize this value getting more quality logits.
-    err = np.sum(ability_diff ** 2)
-    # get new logits.
-    ability = ability - (ability_diff / ability_err)
-    difficult = difficult - (diff_diff / diff_err)
-    bias_difficult = difficult - difficult.mean()
-
-    return predict(ev)
+    # learning
+    for _ in range(steps):
+        # Build estimated data by ability and difficult logits
+        ev = estimated_values(ability, bias_difficult)
+        # Dispersion of estimated values.
+        ability_err, diff_err = dispersion(ev)
+        ability_diff, diff_diff = logits_difference(matrix, ev)
+        # Try to minimize this value getting more quality logits.
+        err = np.sum(ability_diff ** 2)
+        # get new logits.
+        ability = ability - (ability_diff / ability_err)
+        difficult = bias_difficult - (diff_diff / diff_err)
+        bias_difficult = difficult - difficult.mean()
+    return ability, bias_difficult, err
 
 
 def predict(matrix: np.array):
@@ -117,6 +116,7 @@ def dispersion(ev: np.array):
 
 
 def logits_difference(prev_matrix, ev):
-    difference = matrix - ev
+    difference = prev_matrix - ev
     ability_diff = np.sum(difference, axis=1)
-    diff_diff = np.sum(difference, axis=0)
+    diff_diff = -1 * np.sum(difference, axis=0)
+    return ability_diff, diff_diff
