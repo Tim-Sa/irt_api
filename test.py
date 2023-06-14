@@ -26,13 +26,13 @@ class TestIrt(unittest.TestCase):
             true_abilities = np.array([4.72, 3.29, 1.98, 1.98, 1.98, 0.71, -0.45, -2.24, -3.03])
             true_difficult = np.array([-2.85, -2.85, -2.85, -2.85, -1.40, -0.21, 2.40, 1.59, 4.51, 4.51])
             df = open_xlsx('test.xlsx')
-            abilities, difficult, err = irt(df, steps = 9)
+            result = irt(df, steps = 9)
             try:
-                assert_almost_equal(abilities, true_abilities, decimal=1)
-                assert_almost_equal(difficult, true_difficult, decimal=1)
+                assert_almost_equal(result.abilities.to_numpy(), true_abilities, decimal=1)
+                assert_almost_equal(result.difficult.to_numpy(), true_difficult, decimal=1)
             except AssertionError as e:
                 self.assert_(False, msg=str(e))
-            self.assertLessEqual(err, 0.02)
+            self.assertLessEqual(result.err, 0.02)
 
     def test_irt_estimated_values(self):
         true_ev_matrix = [[0.04742587, 0.01798621, 0.00669285],
