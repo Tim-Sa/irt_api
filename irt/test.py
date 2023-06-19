@@ -8,8 +8,8 @@ import numpy as np
 from numpy.testing import assert_almost_equal
 import pandas as pd
 
-from src.irt.irt import predict, estimated_values, irt
-from src.irt.utils import open_xlsx 
+from irt import predict, estimated_values, irt
+from utils import open_xlsx 
 
 
 class TestIrt(unittest.TestCase):
@@ -29,7 +29,7 @@ class TestIrt(unittest.TestCase):
             true_abilities = np.array([4.72, 3.29, 1.98, 1.98, 1.98, 0.71, -0.45, -2.24, -3.03])
             true_difficult = np.array([-2.85, -2.85, -2.85, -2.85, -1.40, -0.21, 2.40, 1.59, 4.51, 4.51])
             current_dir = pathlib.Path().resolve()
-            df = open_xlsx(os.path.join(current_dir, 'resources', 'test.xlsx'))
+            df = open_xlsx(os.path.join(current_dir, 'irt', 'resources', 'test.xlsx'))
             result = irt(df, steps = 9)
             try:
                 assert_almost_equal(result.abilities.to_numpy(), true_abilities, decimal=1)
