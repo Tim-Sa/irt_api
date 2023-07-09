@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from pandas import DataFrame
+from utils import df_consist_only_of
 
 
 class IrtResult:
@@ -97,6 +98,10 @@ def irt(df: DataFrame, steps = None, accept = 0.02):
                                     rejected subjects and tasks, 
                                     model error.
     '''
+    # DataFrame must contain only ones and zeros values.
+    if not df_consist_only_of(df, set([0, 1])):
+        raise ValueError
+    
     # Remove zeros Series from input data.
     df, rejected_subjects, rejected_tasks = prepare(df)
     tasks = df.columns
@@ -173,7 +178,7 @@ def learn_step(matrix, ability, bias_difficult):
     ability_err, diff_err = dispersion(ev)
     ability_diff, diff_diff = logits_difference(matrix, ev)
     # Try to minimize this value getting more quality logits.
-    err = np.sum(ability_diff ** 2)
+    err = np.sum(ability_diff * ability_diff)
     # get new logits.
     ability = ability - (ability_diff / ability_err)
     difficult = bias_difficult - (diff_diff / diff_err)
