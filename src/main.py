@@ -1,5 +1,7 @@
-from fastapi import FastAPI, UploadFile
+from fastapi import FastAPI, Request, UploadFile
+from fastapi.responses import HTMLResponse
 from fastapi.exceptions import HTTPException
+from fastapi.templating import Jinja2Templates
 
 from .irt.irt import irt
 from .irt.utils import df_consist_only_of, open_xlsx
@@ -7,6 +9,13 @@ from .irt.utils import df_consist_only_of, open_xlsx
 from .config import avaliable_mime_types
 
 app = FastAPI()
+
+templates = Jinja2Templates(directory="templates")
+
+
+@app.get("/", response_class=HTMLResponse)
+async def index(request: Request):
+ return templates.TemplateResponse("index.html", {"request": request})
 
 
 @app.post("/upload")
