@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from pandas import DataFrame
-from utils import df_consist_only_of
+from .utils import df_consist_only_of
 
 
 class IrtResult:
@@ -27,7 +27,6 @@ class IrtResult:
         self.err = err
         self.rejected_tasks = rejected_tasks
         self.rejected_subjects = rejected_subjects
-
 
 
 def prepare(df: DataFrame):
@@ -128,8 +127,8 @@ def irt(df: DataFrame, steps = None, accept = 0.02):
                 break
     
     # Concatenate logits and units.
-    ability = pd.Series(ability, subjects).to_dict()
-    bias_difficult = pd.Series(bias_difficult, tasks).to_dict()
+    ability = pd.Series(ability, subjects)
+    bias_difficult = pd.Series(bias_difficult, tasks)
 
     return IrtResult(ability, bias_difficult, 
                      err, rejected_tasks, rejected_subjects)
