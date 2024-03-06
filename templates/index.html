@@ -3,12 +3,33 @@
 
     <head>
         <title>Page Title</title>
+        <link rel="stylesheet" href="static/styles.css">
     </head>
 
     <body>
 
-        <h1>IRT test</h1>
-        <p>Just upload xlsx file with input data</p>
+        <h1>IRT тест онлайн</h1>
+        <div class="table">
+           <h2>Загрузите excel файл с таблицей, со следующей структурой:</h2>
+            <table>
+                <tr>
+                    <th>Задание</th>
+                    <th>Участник A</th>
+                    <th>Участник B</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>0</td>
+                    <td>1</td>
+                </tr>
+            </table>            
+        </div>
+
 
         <form method="post" enctype="multipart/form-data", action="/irt">
             <div>

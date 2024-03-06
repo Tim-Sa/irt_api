@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request, UploadFile
 from fastapi.responses import HTMLResponse
 from fastapi.exceptions import HTTPException
 from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 
 from .irt.irt import irt
 from .irt.utils import df_consist_only_of, open_xlsx
@@ -9,6 +10,7 @@ from .irt.utils import df_consist_only_of, open_xlsx
 from .config import avaliable_mime_types
 
 app = FastAPI()
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
 
