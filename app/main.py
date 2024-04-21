@@ -35,12 +35,7 @@ async def get_logits_by_file(file: UploadFile):
 
     except Exception as e:
 
-        file_info = {
-            'type': file.content_type,
-            'headers': str(file.headers)
-        }
-
-        detail = f"Can't open this file:\n\t{file_info}"
+        detail = "Can't open this file."
         err_msg = f"\n{datetime.now()}\n{detail}\nError:\n\t{e}\n"
 
         logging.error(err_msg, exc_info=True)
