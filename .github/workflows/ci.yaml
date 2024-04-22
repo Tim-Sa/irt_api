@@ -57,7 +57,6 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }} 
-          key: ${{ secrets.SSH_KEY }}
           envs: IMAGE_NAME, REGISTRY, GITHUB_SHA, CONTAINER_NAME
           script: |
             TAG_NAME=$(echo $GITHUB_SHA | head -c7)
