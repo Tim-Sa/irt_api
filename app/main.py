@@ -1,6 +1,7 @@
 import os
 import logging
 from datetime import datetime
+from re import compile
 
 import pandas as pd
 from irt_test.irt import irt
@@ -20,8 +21,9 @@ logging.basicConfig(
     level=logging.ERROR
 )
 
+
 origins = [
-    f"http://{os.getenv('FRONTEND_HOST')}",
+    compile(f"http://{os.getenv('FRONTEND_HOST')}:\d+"),
 ]
 
 
