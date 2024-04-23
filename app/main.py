@@ -21,7 +21,7 @@ logging.basicConfig(
 )
 
 origins = [
-    f"{os.getenv('FRONTEND_HOST')}",
+    f"http://{os.getenv('FRONTEND_HOST')}",
 ]
 
 
