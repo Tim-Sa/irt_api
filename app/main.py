@@ -1,7 +1,5 @@
-import os
 import logging
 from datetime import datetime
-from re import compile
 
 import pandas as pd
 from irt_test.irt import irt
@@ -22,9 +20,7 @@ logging.basicConfig(
 )
 
 
-origins = [
-    compile(f"http://{os.getenv('FRONTEND_HOST')}:\d+"),
-]
+origins = ["*"]
 
 
 app = FastAPI()
