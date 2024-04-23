@@ -1,5 +1,9 @@
 FROM python:3.11
 
+ARG FRONTEND_HOST
+
+ENV FRONTEND_HOST $FRONTEND_HOST
+
 WORKDIR /code
 
 COPY ./requirements.txt /code/requirements.txt

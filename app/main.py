@@ -1,3 +1,4 @@
+import os
 import logging
 from datetime import datetime
 
@@ -6,6 +7,7 @@ from irt_test.irt import irt
 
 from fastapi import FastAPI, UploadFile
 from fastapi.exceptions import HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 
 avaliable_mime_types = [
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -18,8 +20,20 @@ logging.basicConfig(
     level=logging.ERROR
 )
 
+origins = [
+    f"{os.getenv('FRONTEND_HOST')}",
+]
+
+
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["POST"],
+    allow_headers=["*"],
+)
 
 @app.post("/irt")
 async def get_logits_by_file(file: UploadFile):
