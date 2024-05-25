@@ -60,10 +60,11 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }} 
           envs: IMAGE_NAME, REGISTRY, GITHUB_SHA, CONTAINER_NAME
           script: |
-            docker image prune -a -y
+            docker image prune
+            y
             sudo sync; echo 1 > /proc/sys/vm/drop_caches
             TAG_NAME=$(echo $GITHUB_SHA | head -c7)
             docker login -u ${{ secrets.REGISTRY_USERNAME }} -p ${{ secrets.REGISTRY_PASSWORD }} $REGISTRY
             docker stop $CONTAINER_NAME
             docker rm $CONTAINER_NAME
-            docker run -d -p 50052:80 --name $CONTAINER_NAME -t $REGISTRY/$IMAGE_NAME:$TAG_NAME
+            docker run --restart=always -d -p 50052:80 --name $CONTAINER_NAME -t $REGISTRY/$IMAGE_NAME:$TAG_NAME
