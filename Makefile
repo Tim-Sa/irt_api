@@ -1,5 +1,5 @@
 start:
-	uvicorn main:app --reload
+	venv/bin/python -m uvicorn app.main:app --reload
 
 reqs:
 	pip install -r requirements.txt
