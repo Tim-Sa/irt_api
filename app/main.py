@@ -104,7 +104,7 @@ async def get_logits_by_json(irt_info: IrtModel):
         raise HTTPException(status_code=400, detail=detail)
 
     try:
-
+        df = df.T
         irt_result = irt(df)
         irt_result_dict = vars(irt_result)
 
